@@ -4,7 +4,7 @@ import math
 import sys
 
 
-def get_gradated_brightness(original, gradations):
+def get_gradated_brightness(original):
     # На основе текущей яркости выбирается яркость из градаций
     for gradation in gradations:
         if original < gradation:
@@ -12,7 +12,7 @@ def get_gradated_brightness(original, gradations):
     return gradations[len(gradations) - 1]
 
 
-def get_calculated_cell(i, j, mosaic_size, arr):
+def get_calculated_cell(i, j):
     # Вычисление суммы средих яркостей в ячейке
     summ = 0
     for n in range(i, i + mosaic_size):
@@ -27,12 +27,12 @@ def get_calculated_cell(i, j, mosaic_size, arr):
     return summ
 
 
-def get_averange_brightness_from_cell(summ, mosaic_size):
+def get_averange_brightness_from_cell(summ):
     # Вычисление средней яркости в ячейке
     return int(summ // (mosaic_size ** 2))
 
 
-def get_gradations(gradations_steps):
+def get_gradations(steps):
     # Получаем лист градаций (неэффективно)
     gradations = [0]
     step = 255.0 / (gradations_steps - 1)
@@ -44,13 +44,13 @@ def get_gradations(gradations_steps):
 
 
 def main():
-    # Они используются в функциях выше
-    # вообще скорее всего это сделал Extract Method
-    # Хорошо, стоит переделать
-    # global arr, mosaic_size, gradations_steps, gradations
+	# Они используются в функциях выше
+	# вообще скорее всего это сделал Extract Method
+	# Хорошо, стоит переделать
+    global arr, mosaic_size, gradations_steps, gradations
     try:
-        img = Image.open('img2.jpg')
-        # img = Image.open(sys.argv[1])
+        # img = Image.open('img2.jpg')
+        img = Image.open(sys.argv[1])
     except:
         print('Ошибка загрузки картинки: файл не найден')
         input()
@@ -68,12 +68,12 @@ def main():
         while j < image_height:
 
             # Вычисляем среднее по ячейке
-            averenge_summ = get_averange_brightness_from_cell(get_calculated_cell(i, j, mosaic_size, arr), mosaic_size)
+            averenge_summ = get_averange_brightness_from_cell(get_calculated_cell(i, j))
 
             # Обновляем значения
             for n in range(i, i + mosaic_size):
                 for n1 in range(j, j + mosaic_size):
-                    brightness = get_gradated_brightness(averenge_summ, gradations)
+                    brightness = get_gradated_brightness(averenge_summ)
                     try:
                         arr[n][n1][0], arr[n][n1][1], arr[n][n1][2] = brightness, brightness, brightness
                     except:
